@@ -14,6 +14,7 @@ class CursorController:
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
+#test 
 
 def main():
     logging.info("Initializing DrawingTools")
