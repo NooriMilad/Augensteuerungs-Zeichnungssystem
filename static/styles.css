@@ -1,5 +1,6 @@
+/* General Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #e0e0e0;
     margin: 0;
     padding: 0;
@@ -12,77 +13,126 @@ body {
 
 .container {
     display: flex;
-    flex-direction: column;
-    flex: 1;
-    justify-content: space-between;
+    flex-direction: row;
+    gap: 20px;
     padding: 20px;
+    height: 100%;
+    box-sizing: border-box;
 }
 
-.controls, .notebook, .camera {
+.sidebar, .middle-panel, .right-panel {
     background: rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
     padding: 20px;
-    margin-bottom: 20px;
+    box-sizing: border-box;
 }
 
-.controls h1, .controls h2, .notebook h1, .camera h1 {
-    margin-top: 0;
-    color: #fff;
+.sidebar {
+    display: grid;
+    grid-template-columns: repeat(2, 50px);
+    grid-auto-rows: 50px;
+    gap: 10px;
+    background-color: #34495e;
+    color: white;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+.sidebar h1 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    grid-column: span 2;
+    text-align: center;
+}
+
+.tools, .airbrush {
+    display: contents;
 }
 
 button {
     display: block;
-    margin: 10px 0;
-    padding: 10px 20px;
+    margin: 5px 0;
+    padding: 5px 10px;
     background-color: rgba(0, 123, 255, 0.7);
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-size: 12px;
 }
 
 button:hover {
     background-color: rgba(0, 123, 255, 1);
 }
 
-input[type="color"] {
+input[type="color"], input[type="range"] {
     display: block;
-    margin: 10px 0;
-    padding: 10px;
+    margin: 5px 0;
+    padding: 5px;
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 5px;
     background: rgba(255, 255, 255, 0.2);
     color: #fff;
+    font-size: 12px;
 }
 
-textarea, canvas {
-    width: 100%;
-    height: 100%;
-    padding: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 5px;
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    resize: none;
+.middle-panel {
+    flex: 1;
+    padding: 20px;
+    background-color: rgba(236, 240, 241, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
 }
 
-.camera {
-    width: 300px;
-    height: 300px;
-    position: absolute;
-    top: 20px;
-    right: 20px;
+.middle-panel h1 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#notebookCanvas {
+    background-color: white;
+    border: 1px solid #bdc3c7;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.right-panel {
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    z-index: 2;
+}
+
+.camera {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.camera h1 {
+    font-size: 18px;
+    margin-bottom: 10px;
 }
 
 .camera img {
     border-radius: 10px;
+}
+
+.right-panel h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#eyeTrackingData {
+    font-size: 14px;
+    color: #bdc3c7;
 }

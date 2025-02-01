@@ -21,25 +21,42 @@ Ein System entwickeln, mit dem Menschen durch ihre Augenbewegungen zeichnen kön
 
 ## Zusätzliche Ziele
 - Die Technologie für Augensteuerung weiterentwickeln.
-- Menschen mit Behinderungen neue kreative Möglichkeiten geben.
-- Mehr Bewusstsein für Barrierefreiheit in der Technik schaffen.
 
-## Installation und Ausführung
+## Setup-Anleitung
 
-1. Erstelle und aktiviere eine virtuelle Umgebung:
+### Voraussetzungen
+- Python 3.x
+- Node.js und npm
+- Virtuelle Umgebung (optional, aber empfohlen)
+
+### Installation
+
+1. **Repository klonen**:
+   ```sh
+   git clone https://github.com/username/Augensteuerungs-Zeichnungssystem.git
+   cd Augensteuerungs-Zeichnungssystem
+   ```
+
+2. Erstelle und aktiviere eine virtuelle Umgebung:
     ```sh
     python -m venv .venv
     source .venv/bin/activate  # Auf Windows: .venv\Scripts\activate
     ```
 
-2. Installiere die benötigten Abhängigkeiten:
+3. Installiere die benötigten Abhängigkeiten:
     ```sh
     pip install -r requirements.txt
     ```
 
-3. Starte das Projekt:
+4. Kompiliere den TypeScript-Code:
     ```sh
-    python main.py
+    npm install
+    npm run build
+    ```
+
+5. Starte das Projekt:
+    ```sh
+    python app.py
     ```
 
 ## Tests ausführen
@@ -60,7 +77,7 @@ Ein System entwickeln, mit dem Menschen durch ihre Augenbewegungen zeichnen kön
 Augensteuerungs-Zeichnungssystem/
 ├── .git
 ├── .venv
-├── main.py
+├── app.py
 ├── README.md
 ├── requirements.txt
 ├── src/
@@ -70,9 +87,13 @@ Augensteuerungs-Zeichnungssystem/
 │   │   └── eye_tracker.py
 │   ├── drawing_tools/
 │   │   └── tools.py
-│   ├── ui/
-│   │   └── interface.py
-│   └── accessibility/
-│       └── settings.py
+├── static/
+│   ├── styles.css
+├── templates/
+│   └── index.html
+├── tsconfig.json
+├── webpack.config.js
 └── tests/
-    └── test_main.py
+    ├── test_cursor_controller.py
+    ├── test_eye_tracker.py
+    └── test_tools.py

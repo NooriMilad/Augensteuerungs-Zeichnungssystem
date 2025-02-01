@@ -4,11 +4,11 @@ import numpy as np
 
 class DrawingTools:
     def __init__(self):
-        self.top_left = (50, 50)
-        self.bottom_right = (200, 200)
-        self.color = 'red'
-        self.width = 5
-        self.pen_color = "black"
+        self.pen_color = (0, 0, 0)  # Default pen color is black
+        self.top_left = (0, 0)
+        self.bottom_right = (0, 0)
+        self.color = (255, 0, 0)  # Default rectangle color is red
+        self.width = 1  # Default rectangle border width
 
     def set_pen_color(self, color):
         self.pen_color = color
