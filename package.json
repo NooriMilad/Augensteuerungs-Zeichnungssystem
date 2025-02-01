@@ -1,0 +1,24 @@
+{
+  "name": "augensteuerungs-zeichnungssystem",
+  "version": "1.0.0",
+  "description": "## Projektteam - Milad - Akif",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NooriMilad/Augensteuerungs-Zeichnungssystem.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NooriMilad/Augensteuerungs-Zeichnungssystem/issues"
+  },
+  "homepage": "https://github.com/NooriMilad/Augensteuerungs-Zeichnungssystem#readme",
+  "devDependencies": {
+    "ts-loader": "^9.5.2",
+    "webpack-cli": "^6.0.1"
+  }
+}

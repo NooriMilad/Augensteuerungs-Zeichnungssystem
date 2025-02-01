@@ -1,0 +1,35 @@
+<!-- filepath: /Users/marcoglavic/Documents/Augensteuerungs-Zeichnungssystem/templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eye Tracking Paint Program</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="camera">
+            <h1>Live Webcam Feed</h1>
+            <img src="{{ url_for('video_feed') }}" width="300" height="300">
+        </div>
+        <div class="controls">
+            <h1>Controls</h1>
+            <button id="toggleDrawing">Toggle Drawing</button>
+            <input type="color" id="penColor" name="penColor" value="#000000">
+            <button id="changeColor">Change Color</button>
+            <div>
+                <h2>Eye Tracking Data</h2>
+                <p id="eyeTrackingData">Direction: N/A, Percentage: N/A</p>
+            </div>
+        </div>
+        <div class="notebook">
+            <h1>Notebook</h1>
+            <canvas id="notebookCanvas" width="800" height="600" style="border:1px solid #000000;"></canvas>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='bundle.js') }}"></script>
+</body>
+</html>

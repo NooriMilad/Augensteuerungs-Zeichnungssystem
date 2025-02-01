@@ -1,3 +1,4 @@
+import os
 import logging
 from eye_tracking.eye_tracker import EyeTracker
 from drawing_tools.tools import DrawingTools
@@ -14,29 +15,23 @@ class CursorController:
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
-#test 
 
 def main():
+    # Suppress Tkinter deprecation warning
+    os.environ['TK_SILENCE_DEPRECATION'] = '1'
+
     logging.info("Initializing DrawingTools")
     drawing_tools = DrawingTools()
 
     logging.info("Initializing EyeTracker")
     eye_tracker = EyeTracker(drawing_tools)
-    
+
     logging.info("Initializing CursorController")
     cursor_controller = CursorController(eye_tracker)
-    
+
     logging.info("Initializing UserInterface")
-    ui = UserInterface(cursor_controller, drawing_tools)
-    
-    logging.info("Initializing AccessibilitySettings")
-    accessibility_settings = AccessibilitySettings()
-
-    logging.info("Running UserInterface")
+    ui = UserInterface(cursor_controller, drawing_tools, eye_tracker)
     ui.run()
-
-    logging.info("Starting Eye Tracking")
-    eye_tracker.start_tracking(cursor_controller.move_cursor)
 
 if __name__ == "__main__":
     main()

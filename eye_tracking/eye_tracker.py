@@ -83,3 +83,8 @@ class EyeTracker:
 
         self.cap.release()
         cv2.destroyAllWindows()
+
+    def get_gaze_coordinates(self):
+        # Implement the logic to get gaze coordinates
+        # For example, return (x, y) coordinates where the user is looking
+        return (100, 100)  # Placeholder coordinates
