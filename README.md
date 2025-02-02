@@ -150,3 +150,5 @@ Beiträge sind willkommen! Bitte öffnen Sie ein Issue oder reichen Sie einen Pu
 ## Lizenz
 
 Dieses Projekt ist unter der MIT-Lizenz lizenziert.
+
+![Diagram des Programms](/Users/marcoglavic/Documents/Augensteuerungs-Zeichnungssystem/Augensteuerungs-Zeichnungssystem.png)
