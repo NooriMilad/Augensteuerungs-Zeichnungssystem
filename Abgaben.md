@@ -58,6 +58,10 @@
     npm install
     npm run build
     ```
+6. Aktualisieren des Repositorys:
+    ```sh
+    git pull origin main
+    ```
 
 ## Starten der Anwendung:
 1. Flask-Anwendung starten: 
