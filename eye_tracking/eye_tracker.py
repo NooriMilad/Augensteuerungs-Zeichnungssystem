@@ -4,11 +4,12 @@ import cv2
 class EyeTracker:
     def __init__(self, drawing_tools):
         self.mp_face_mesh = mp.solutions.face_mesh
-        self.face_mesh = self.mp_face_mesh.FaceMesh()
+        self.face_mesh = self.mp_face_mesh.FaceMesh(refine_landmarks=True)
         self.cap = cv2.VideoCapture(0)  # Open the default camera
         self.prev_eye_position = None
         self.drawing_tools = drawing_tools
         self.drawing_active = False
+        self.screen_width, self.screen_height = 640, 480  # Beispielwerte, anpassen nach Bedarf
 
     def set_drawing_active(self, active):
         self.drawing_active = active
@@ -83,10 +84,17 @@ class EyeTracker:
         self.cap.release()
         cv2.destroyAllWindows()
 
-    def get_gaze_coordinates(self):
-        # Implement the logic to get gaze coordinates
-        # For example, return (x, y) coordinates where the user is looking
-        return (100, 100)  # Placeholder coordinates
+    def get_gaze_coordinates(self, frame):
+        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        results = self.face_mesh.process(rgb_frame)
+
+        if results.multi_face_landmarks:
+            for face_landmarks in results.multi_face_landmarks:
+                left_eye = face_landmarks.landmark[468]
+                left_eye_x = int(left_eye.x * self.screen_width)
+                left_eye_y = int(left_eye.y * self.screen_height)
+                return left_eye_x, left_eye_y
+        return None, None
 
     def get_frame(self):
         ret, frame = self.cap.read()
