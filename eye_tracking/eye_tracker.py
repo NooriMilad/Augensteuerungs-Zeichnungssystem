@@ -5,7 +5,7 @@ class EyeTracker:
     def __init__(self, drawing_tools):
         self.mp_face_mesh = mp.solutions.face_mesh
         self.face_mesh = self.mp_face_mesh.FaceMesh()
-        self.cap = None
+        self.cap = cv2.VideoCapture(0)  # Open the default camera
         self.prev_eye_position = None
         self.drawing_tools = drawing_tools
         self.drawing_active = False
@@ -51,7 +51,6 @@ class EyeTracker:
             # Add your drawing logic here
 
     def start_tracking(self, callback):
-        self.cap = cv2.VideoCapture(0)
         if not self.cap.isOpened():
             print("Error: Could not open camera.")
             return
@@ -88,3 +87,20 @@ class EyeTracker:
         # Implement the logic to get gaze coordinates
         # For example, return (x, y) coordinates where the user is looking
         return (100, 100)  # Placeholder coordinates
+
+    def get_frame(self):
+        ret, frame = self.cap.read()
+        if ret:
+            # Process the frame to detect gaze coordinates
+            gaze_coordinates = self.detect_gaze(frame)
+            return ret, frame, gaze_coordinates
+        return ret, None, None
+
+    def detect_gaze(self, frame):
+        # Implement the logic to detect gaze coordinates
+        # This is a placeholder implementation
+        gaze_coordinates = (320, 240)  # Example coordinates
+        return gaze_coordinates
+
+    def release(self):
+        self.cap.release()

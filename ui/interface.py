@@ -28,83 +28,67 @@ class UserInterface:
         self.canvas = tk.Canvas(self.camera_frame, width=300, height=300)
         self.canvas.pack()
 
-        # Create a frame for the toolbar at the bottom
-        self.toolbar_frame = ttk.Frame(self.main_frame)
-        self.toolbar_frame.pack(side=tk.BOTTOM, fill=tk.X)
+        # Create a frame for the drawing tools
+        self.tools_frame = ttk.Frame(self.main_frame, width=200)
+        self.tools_frame.pack(side=tk.LEFT, fill=tk.Y, padx=10, pady=10)
 
-        # Add buttons to the toolbar
-        self.add_toolbar_buttons()
+        # Add buttons for drawing tools
+        self.brush_button = ttk.Button(self.tools_frame, text="Brush", command=self.set_brush_tool)
+        self.brush_button.pack(pady=5)
+        self.shape_button = ttk.Button(self.tools_frame, text="Shape", command=self.set_shape_tool)
+        self.shape_button.pack(pady=5)
+        self.fill_button = ttk.Button(self.tools_frame, text="Fill", command=self.set_fill_tool)
+        self.fill_button.pack(pady=5)
+        self.airbrush_button = ttk.Button(self.tools_frame, text="Airbrush", command=self.set_airbrush_tool)
+        self.airbrush_button.pack(pady=5)
 
-        # Create a frame for the eye tracking data
-        self.tracking_frame = ttk.Frame(self.main_frame)
-        self.tracking_frame.pack(side=tk.LEFT, padx=10, pady=10, fill=tk.BOTH, expand=True)
+        # Add color picker
+        self.color_picker_button = ttk.Button(self.tools_frame, text="Choose Color", command=self.choose_color)
+        self.color_picker_button.pack(pady=5)
 
-        # Add labels for eye tracking data
-        self.add_tracking_labels()
+        # Add stroke width slider
+        self.stroke_width_slider = ttk.Scale(self.tools_frame, from_=1, to=10, orient=tk.HORIZONTAL, command=self.set_stroke_width)
+        self.stroke_width_slider.pack(pady=5)
 
-        # Initialize the webcam feed
-        self.cap = cv2.VideoCapture(0)
-        if not self.cap.isOpened():
-            messagebox.showerror("Error", "Could not open webcam.")
-            self.root.destroy()
-            return
+        # Start the video feed
+        self.video_feed()
 
-        self.update_frame()
+    def set_brush_tool(self):
+        self.drawing_tools.set_tool('brush')
 
-    def add_toolbar_buttons(self):
-        # Add a button to change the pen color
-        color_button = ttk.Button(self.toolbar_frame, text="Change Color", command=self.change_color)
-        color_button.pack(side=tk.LEFT, padx=2, pady=2)
+    def set_shape_tool(self):
+        self.drawing_tools.set_tool('shape')
 
-        # Add a button to start/stop drawing
-        draw_button = ttk.Button(self.toolbar_frame, text="Toggle Drawing", command=self.toggle_drawing)
-        draw_button.pack(side=tk.LEFT, padx=2, pady=2)
+    def set_fill_tool(self):
+        self.drawing_tools.set_tool('fill')
 
-    def add_tracking_labels(self):
-        self.tracking_label = ttk.Label(self.tracking_frame, text="Eye Tracking Data", font=("Helvetica", 16))
-        self.tracking_label.pack(pady=10)
+    def set_airbrush_tool(self):
+        self.drawing_tools.set_tool('airbrush')
 
-        self.direction_label = ttk.Label(self.tracking_frame, text="Direction: N/A", font=("Helvetica", 14))
-        self.direction_label.pack(pady=5)
-
-        self.percentage_label = ttk.Label(self.tracking_frame, text="Percentage: N/A", font=("Helvetica", 14))
-        self.percentage_label.pack(pady=5)
-
-    def change_color(self):
+    def choose_color(self):
         color = colorchooser.askcolor()[1]
         if color:
+            self.pen_color = color
             self.drawing_tools.set_pen_color(color)
 
-    def toggle_drawing(self):
-        self.drawing_active = not self.drawing_active
+    def set_stroke_width(self, width):
+        self.drawing_tools.set_stroke_width(int(width))
 
-    def update_frame(self):
-        ret, frame = self.cap.read()
+    def video_feed(self):
+        ret, frame, gaze_coordinates = self.eye_tracker.get_frame()
         if ret:
+            # Draw on the frame based on gaze coordinates
             if self.drawing_active:
-                gaze_coordinates = self.eye_tracker.get_gaze_coordinates()
-                self.drawing_tools.update_rectangle_position(gaze_coordinates)
-                self.update_tracking_labels(gaze_coordinates)
-            frame_with_rectangle = self.drawing_tools.draw_rectangle_on_frame(frame)
-            img = Image.fromarray(cv2.cvtColor(frame_with_rectangle, cv2.COLOR_BGR2RGB))
+                frame = self.drawing_tools.draw_on_frame(frame, gaze_coordinates)
+
+            # Convert the frame to an image
+            img = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
             imgtk = ImageTk.PhotoImage(image=img)
             self.canvas.create_image(0, 0, anchor=tk.NW, image=imgtk)
-            self.canvas.imgtk = imgtk  # Keep a reference to avoid garbage collection
+            self.canvas.imgtk = imgtk
 
-        self.root.after(10, self.update_frame)
-
-    def update_tracking_labels(self, gaze_coordinates):
-        x, y = gaze_coordinates
-        direction = f"Direction: ({x}, {y})"
-        percentage = f"Percentage: {min(100, max(0, int((x / self.canvas.winfo_width()) * 100)))}%"
-        self.direction_label.config(text=direction)
-        self.percentage_label.config(text=percentage)
-
-    def on_closing(self):
-        if self.cap:
-            self.cap.release()
-        self.root.destroy()
+        # Repeat after an interval to capture the next frame
+        self.root.after(10, self.video_feed)
 
     def run(self):
-        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.root.mainloop()
