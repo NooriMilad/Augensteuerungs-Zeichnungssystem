@@ -22,7 +22,7 @@ Ein System entwickeln, mit dem Menschen durch ihre Augenbewegungen zeichnen kön
 5. Barrierefreiheit
 
 [Diagram des Programms](/Augensteuerungs-Zeichnungssystem.pdf)
-![Diagram des Programms](/Augensteuerungs-Zeichnungssystem.png)
+// ![Diagram des Programms](/Augensteuerungs-Zeichnungssystem.png)
 
 ## Funktionen
 
