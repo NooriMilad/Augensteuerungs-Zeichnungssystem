@@ -1,66 +1,61 @@
+import Konva from 'konva';
+
 document.addEventListener('DOMContentLoaded', () => {
-    const notebookCanvas = document.getElementById('notebookCanvas') as HTMLCanvasElement;
-    const ctx = notebookCanvas.getContext('2d') as CanvasRenderingContext2D;
+    const notebookCanvas = document.getElementById('notebookCanvas') as HTMLDivElement;
     const eyeTrackingDataElement = document.getElementById('eyeTrackingData') as HTMLParagraphElement;
     const toggleDrawingButton = document.getElementById('toggleDrawing') as HTMLButtonElement;
 
     let drawingActive = false;
-    let currentTool = 'pencilTool'; // Default tool
     let penColor = '#000000'; // Default color
     let strokeWidth = 5; // Default stroke width
-    let scale = 1; // Default scale for magnifier
     let gazeX = 0;
     let gazeY = 0;
 
-    // Tool buttons
-    const tools = [
-        "freeFormSelect", "rectangularSelect", "eraser", "fillColor",
-        "pickColorTool", "magnifier", "pencilTool", "paintBrush",
-        "airBrushTool", "textTool", "lineTool", "curveTool",
-        "rectangularTool", "polygon", "ellipseTool", "roundedRectangleTool"
-    ];
-
-    // Add event listeners to all tool buttons
-    tools.forEach(tool => {
-        const button = document.getElementById(tool) as HTMLButtonElement;
-        button.addEventListener('click', () => {
-            currentTool = tool;
-            updateCursor(tool);
-            fetch('/set_tool', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tool: tool })
-            });
-        });
+    const stage = new Konva.Stage({
+        container: 'notebookCanvas',
+        width: window.innerWidth,
+        height: window.innerHeight
     });
 
-    // Update cursor based on selected tool
-    function updateCursor(tool: string) {
-        switch (tool) {
-            case 'pencilTool':
-            case 'paintBrush':
-            case 'airBrushTool':
-                notebookCanvas.style.cursor = 'url("https://cdn-icons-png.flaticon.com/512/60/60990.png"), auto';
-                break;
-            case 'eraser':
-                notebookCanvas.style.cursor = 'url("https://cdn-icons-png.flaticon.com/512/60/60990.png"), auto';
-                break;
-            case 'textTool':
-                notebookCanvas.style.cursor = 'text';
-                break;
-            case 'magnifier':
-                notebookCanvas.style.cursor = 'zoom-in';
-                break;
-            default:
-                notebookCanvas.style.cursor = 'crosshair';
-                break;
+    const layer = new Konva.Layer();
+    stage.add(layer);
+
+    let isDrawing = false;
+    let lastLine: Konva.Line;
+
+    stage.on('mousedown touchstart', () => {
+        if (!drawingActive) return;
+        isDrawing = true;
+        const pos = stage.getPointerPosition();
+        if (pos) {
+            lastLine = new Konva.Line({
+                stroke: penColor,
+                strokeWidth: strokeWidth,
+                globalCompositeOperation: 'source-over',
+                points: [pos.x, pos.y]
+            });
+            layer.add(lastLine);
         }
-    }
+    });
+
+    stage.on('mousemove touchmove', () => {
+        if (!isDrawing) return;
+        const pos = stage.getPointerPosition();
+        if (pos) {
+            const newPoints = lastLine.points().concat([pos.x, pos.y]);
+            lastLine.points(newPoints);
+            layer.batchDraw();
+        }
+    });
+
+    stage.on('mouseup touchend', () => {
+        isDrawing = false;
+    });
 
     // Toggle drawing state
     toggleDrawingButton.addEventListener('click', () => {
         drawingActive = !drawingActive;
-        toggleDrawingButton.innerHTML = drawingActive ? '<i class="fas fa-stop"></i>' : '<i class="fas fa-play"></i>';
+        toggleDrawingButton.innerHTML = drawingActive ? '<i class="fas fa-stop"></i> Stop' : '<i class="fas fa-play"></i> Start';
         fetch('/toggle_drawing', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' }
@@ -89,28 +84,77 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Drawing functionality
-    function draw() {
-        if (!drawingActive) return;
+    // Tool selection
+    const pencilToolButton = document.getElementById('pencilTool') as HTMLButtonElement;
+    pencilToolButton.addEventListener('click', () => {
+        stage.off('mousedown touchstart mousemove touchmove mouseup touchend');
+        stage.on('mousedown touchstart', () => {
+            if (!drawingActive) return;
+            isDrawing = true;
+            const pos = stage.getPointerPosition();
+            if (pos) {
+                lastLine = new Konva.Line({
+                    stroke: penColor,
+                    strokeWidth: strokeWidth,
+                    globalCompositeOperation: 'source-over',
+                    points: [pos.x, pos.y]
+                });
+                layer.add(lastLine);
+            }
+        });
 
-        ctx.lineWidth = strokeWidth;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = penColor;
+        stage.on('mousemove touchmove', () => {
+            if (!isDrawing) return;
+            const pos = stage.getPointerPosition();
+            if (pos) {
+                const newPoints = lastLine.points().concat([pos.x, pos.y]);
+                lastLine.points(newPoints);
+                layer.batchDraw();
+            }
+        });
 
-        if (currentTool === 'pencilTool' || currentTool === 'paintBrush') {
-            ctx.lineTo(gazeX / scale, gazeY / scale);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(gazeX / scale, gazeY / scale);
-        } else if (currentTool === 'eraser') {
-            ctx.clearRect(gazeX / scale - strokeWidth / 2, gazeY / scale - strokeWidth / 2, strokeWidth, strokeWidth);
-        }
-    }
+        stage.on('mouseup touchend', () => {
+            isDrawing = false;
+        });
+    });
+
+    const eraserToolButton = document.getElementById('eraserTool') as HTMLButtonElement;
+    eraserToolButton.addEventListener('click', () => {
+        stage.off('mousedown touchstart mousemove touchmove mouseup touchend');
+        stage.on('mousedown touchstart', () => {
+            if (!drawingActive) return;
+            isDrawing = true;
+            const pos = stage.getPointerPosition();
+            if (pos) {
+                lastLine = new Konva.Line({
+                    stroke: 'white',
+                    strokeWidth: strokeWidth,
+                    globalCompositeOperation: 'destination-out',
+                    points: [pos.x, pos.y]
+                });
+                layer.add(lastLine);
+            }
+        });
+
+        stage.on('mousemove touchmove', () => {
+            if (!isDrawing) return;
+            const pos = stage.getPointerPosition();
+            if (pos) {
+                const newPoints = lastLine.points().concat([pos.x, pos.y]);
+                lastLine.points(newPoints);
+                layer.batchDraw();
+            }
+        });
+
+        stage.on('mouseup touchend', () => {
+            isDrawing = false;
+        });
+    });
+
+    // Add event listeners for other tools as needed...
 
     // Eye tracking data
     function updateEyeTrackingData() {
-        if (!drawingActive) return;
-
         fetch('/get_eye_tracking_data')
             .then(response => response.json())
             .then(data => {
@@ -118,11 +162,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 gazeX = gazeCoordinates[0];
                 gazeY = gazeCoordinates[1];
                 const direction = `Direction: (${gazeX}, ${gazeY})`;
-                const percentage = `Percentage: ${Math.min(100, Math.max(0, Math.floor((gazeX / 640) * 100)))}%`;
+                const percentage = `Percentage: ${Math.min(100, Math.max(0, Math.floor((gazeX / notebookCanvas.clientWidth) * 100)))}%`;
                 eyeTrackingDataElement.textContent = `${direction}, ${percentage}`;
 
                 if (drawingActive) {
-                    draw();
+                    const pos = { x: gazeX, y: gazeY };
+                    if (isDrawing) {
+                        const newPoints = lastLine.points().concat([pos.x, pos.y]);
+                        lastLine.points(newPoints);
+                        layer.batchDraw();
+                    } else {
+                        isDrawing = true;
+                        lastLine = new Konva.Line({
+                            stroke: penColor,
+                            strokeWidth: strokeWidth,
+                            globalCompositeOperation: 'source-over',
+                            points: [pos.x, pos.y]
+                        });
+                        layer.add(lastLine);
+                    }
                 }
             });
     }

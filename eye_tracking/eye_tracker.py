@@ -21,94 +21,30 @@ class EyeTracker:
                 # Extract eye position from landmarks
                 left_eye = face_landmarks.landmark[133]  # Example landmark for left eye
                 right_eye = face_landmarks.landmark[362]  # Example landmark for right eye
-                return (left_eye.x, left_eye.y), (right_eye.x, right_eye.y)
+                left_eye_coords = (int(left_eye.x * frame.shape[1]), int(left_eye.y * frame.shape[0]))
+                right_eye_coords = (int(right_eye.x * frame.shape[1]), int(right_eye.y * frame.shape[0]))
+                # Draw circles on the eyes
+                cv2.circle(frame, left_eye_coords, 5, (0, 255, 0), -1)
+                cv2.circle(frame, right_eye_coords, 5, (0, 255, 0), -1)
+                return left_eye_coords, right_eye_coords
         return None, None
-
-    def get_direction(self, prev_pos, curr_pos):
-        if not prev_pos:
-            return None
-        dx = curr_pos[0] - prev_pos[0]
-        dy = curr_pos[1] - prev_pos[1]
-        if abs(dx) > abs(dy):
-            return 'left' if dx < 0 else 'right'
-        else:
-            return 'up' if dy < 0 else 'down'
-
-    def draw_direction(self, direction):
-        if not self.drawing_active:
-            return
-        pen_color = self.drawing_tools.pen_color
-        if direction == 'left':
-            print(f"Drawing to the left with color {pen_color}")
-            # Add your drawing logic here
-        elif direction == 'right':
-            print(f"Drawing to the right with color {pen_color}")
-            # Add your drawing logic here
-        elif direction == 'up':
-            print(f"Drawing upwards with color {pen_color}")
-            # Add your drawing logic here
-        elif direction == 'down':
-            print(f"Drawing downwards with color {pen_color}")
-            # Add your drawing logic here
-
-    def start_tracking(self, callback):
-        if not self.cap.isOpened():
-            print("Error: Could not open camera.")
-            return
-
-        eye_positions = []
-
-        while True:
-            ret, frame = self.cap.read()
-            if not ret:
-                print("Error: Could not read frame.")
-                break
-
-            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            left_eye, right_eye = self.get_eye_position(frame_rgb)
-            if left_eye and right_eye:
-                current_eye_position = ((left_eye[0] + right_eye[0]) / 2, (left_eye[1] + right_eye[1]) / 2)
-                eye_positions.append(current_eye_position)
-                callback(current_eye_position[0], current_eye_position[1])
-
-                direction = self.get_direction(self.prev_eye_position, current_eye_position)
-                if direction:
-                    self.draw_direction(direction)
-                self.prev_eye_position = current_eye_position
-
-            cv2.imshow('Eye Tracking', frame)
-
-            if cv2.waitKey(5) & 0xFF == 27:  # Press 'Esc' to exit
-                break
-
-        self.cap.release()
-        cv2.destroyAllWindows()
-
-    def get_gaze_coordinates(self, frame):
-        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results = self.face_mesh.process(rgb_frame)
-
-        if results.multi_face_landmarks:
-            for face_landmarks in results.multi_face_landmarks:
-                left_eye = face_landmarks.landmark[468]
-                left_eye_x = int(left_eye.x * self.screen_width)
-                left_eye_y = int(left_eye.y * self.screen_height)
-                return left_eye_x, left_eye_y
-        return None, None
-
-    def get_frame(self):
-        ret, frame = self.cap.read()
-        if ret:
-            # Process the frame to detect gaze coordinates
-            gaze_coordinates = self.detect_gaze(frame)
-            return ret, frame, gaze_coordinates
-        return ret, None, None
-
-    def detect_gaze(self, frame):
-        # Implement the logic to detect gaze coordinates
-        # This is a placeholder implementation
-        gaze_coordinates = (320, 240)  # Example coordinates
-        return gaze_coordinates
 
     def release(self):
         self.cap.release()
+
+    def update(self):
+        while True:
+            ret, frame = self.cap.read()
+            if not ret:
+                break
+            frame = cv2.flip(frame, 1)
+            eye_position = self.get_eye_position(frame)
+            if eye_position:
+                print(f"Left Eye: {eye_position[0]}, Right Eye: {eye_position[1]}")
+            if eye_position and self.drawing_active:
+                self.drawing_tools.draw(eye_position)
+            cv2.imshow('Eye Tracker', frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+        self.cap.release()
+        cv2.destroyAllWindows()
