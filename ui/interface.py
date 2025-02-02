@@ -50,6 +50,22 @@ class UserInterface:
         self.stroke_width_slider = ttk.Scale(self.tools_frame, from_=1, to=10, orient=tk.HORIZONTAL, command=self.set_stroke_width)
         self.stroke_width_slider.pack(pady=5)
 
+        # Add buttons for additional drawing tools
+        self.text_button = ttk.Button(self.tools_frame, text="Text", command=self.set_text_tool)
+        self.text_button.pack(pady=5)
+        self.line_button = ttk.Button(self.tools_frame, text="Line", command=self.set_line_tool)
+        self.line_button.pack(pady=5)
+        self.curve_button = ttk.Button(self.tools_frame, text="Curve", command=self.set_curve_tool)
+        self.curve_button.pack(pady=5)
+        self.rectangle_button = ttk.Button(self.tools_frame, text="Rectangle", command=self.set_rectangle_tool)
+        self.rectangle_button.pack(pady=5)
+        self.polygon_button = ttk.Button(self.tools_frame, text="Polygon", command=self.set_polygon_tool)
+        self.polygon_button.pack(pady=5)
+        self.ellipse_button = ttk.Button(self.tools_frame, text="Ellipse", command=self.set_ellipse_tool)
+        self.ellipse_button.pack(pady=5)
+        self.rounded_rectangle_button = ttk.Button(self.tools_frame, text="Rounded Rectangle", command=self.set_rounded_rectangle_tool)
+        self.rounded_rectangle_button.pack(pady=5)
+
         # Start the video feed
         self.video_feed()
 
@@ -73,6 +89,48 @@ class UserInterface:
 
     def set_stroke_width(self, width):
         self.drawing_tools.set_stroke_width(int(width))
+
+    def set_text_tool(self):
+        self.drawing_tools.set_tool('text')
+
+    def set_line_tool(self):
+        self.drawing_tools.set_tool('line')
+
+    def set_curve_tool(self):
+        self.drawing_tools.set_tool('curve')
+
+    def set_rectangle_tool(self):
+        self.drawing_tools.set_tool('rectangle')
+
+    def set_polygon_tool(self):
+        self.drawing_tools.set_tool('polygon')
+
+    def set_ellipse_tool(self):
+        self.drawing_tools.set_tool('ellipse')
+
+    def set_rounded_rectangle_tool(self):
+        self.drawing_tools.set_tool('rounded_rectangle')
+
+    def add_text(self, text, position):
+        self.drawing_tools.add_text(text, position)
+
+    def draw_line(self, start, end):
+        self.drawing_tools.draw_line(start, end)
+
+    def draw_curve(self, points):
+        self.drawing_tools.draw_curve(points)
+
+    def draw_rectangle(self, top_left, bottom_right):
+        self.drawing_tools.draw_rectangle(top_left, bottom_right)
+
+    def draw_polygon(self, points):
+        self.drawing_tools.draw_polygon(points)
+
+    def draw_ellipse(self, top_left, bottom_right):
+        self.drawing_tools.draw_ellipse(top_left, bottom_right)
+
+    def draw_rounded_rectangle(self, top_left, bottom_right, radius):
+        self.drawing_tools.draw_rounded_rectangle(top_left, bottom_right, radius)
 
     def video_feed(self):
         ret, frame, gaze_coordinates = self.eye_tracker.get_frame()
