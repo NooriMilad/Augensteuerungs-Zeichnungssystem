@@ -21,6 +21,8 @@ Ein System entwickeln, mit dem Menschen durch ihre Augenbewegungen zeichnen kön
 4. Benutzeroberfläche
 5. Barrierefreiheit
 
+[Diagram des Programms](/Augensteuerungs-Zeichnungssystem.pdf)
+
 ## Funktionen
 
 - **Augensteuerungs-Zeichnen**: Verwenden Sie Ihre Augenbewegungen, um auf der Leinwand zu zeichnen.
@@ -151,4 +153,3 @@ Beiträge sind willkommen! Bitte öffnen Sie ein Issue oder reichen Sie einen Pu
 
 Dieses Projekt ist unter der MIT-Lizenz lizenziert.
 
-![Diagram des Programms](/Augensteuerungs-Zeichnungssystem.png)
