@@ -29,6 +29,26 @@ Ein System entwickeln, mit dem Menschen durch ihre Augenbewegungen zeichnen kön
 - Node.js und npm
 - Virtuelle Umgebung (optional, aber empfohlen)
 
+### Benutzte Bibliotheken
+
+- Flask: 
+    Lightweight Web Application Framework nach WSGI (Web Server Gateway Interface) Standard. 
+    Für weitere Infos: https://flask.palletsprojects.com/
+- OpenCV: 
+    Computer Vision (Bildverarbeitung, Bilderkennung usw.) Library
+    Für weitere Infos: https://opencv.org/
+- MediaPipe:
+    Computer Vision Bibliothek von Google. Sie erhält vortrainierte Modelle für verschiedene
+    Aufgaben wie Gesichtserkennung und viel mehr.
+    Für weitere Infos: https://ai.google.dev/edge/mediapipe/solutions/guide?hl=de
+- PyAutoGui:
+    Zum (automatisierten) Kontrollieren der Eingaben (Maus und Tastatur)
+    Für weitere Infos: https://pyautogui.readthedocs.io/en/latest/
+- Tk:
+    Standard Python GUI Toolkit (Labels, Buttons, Grid usw.)
+    Für weitere Infos: https://docs.python.org/3/library/tkinter.html#important-tk-concepts
+
+
 ### Installation
 
 1. **Repository klonen**:

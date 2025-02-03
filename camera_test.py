@@ -6,19 +6,27 @@ def main():
         print("Error: Could not open camera.")
         return
 
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            print("Error: Could not read frame.")
-            break
+    cv2.namedWindow('Camera Test', cv2.WINDOW_NORMAL)
 
-        cv2.imshow('Camera Test', frame)
+    try:
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                print("Error: Could not read frame.")
+                break
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+            cv2.imshow('Camera Test', frame)
 
-    cap.release()
-    cv2.destroyAllWindows()
+            key = cv2.waitKey(1) & 0xFF
+            if key == ord('q'):  # Quit on 'q' key press
+                break
+
+            if cv2.getWindowProperty('Camera Test', cv2.WND_PROP_VISIBLE) < 1:
+                break  # Window closed manually
+
+    finally:
+        cap.release()
+        cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()
