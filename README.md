@@ -1,4 +1,6 @@
-# Augensteuerungs-Zeichnungssystem
+# Augensteuerungs-Zeichnungsprogramm
+
+Dieses Projekt ist ein Augensteuerungs-Zeichnungsprogramm, das es Benutzern ermöglicht, mit ihren Augenbewegungen auf einer Leinwand zu zeichnen. Die Anwendung verwendet MediaPipe und OpenCV für die Augenverfolgung und bietet verschiedene Zeichenwerkzeuge.
 
 ## Projektteam
 - Milad
@@ -18,6 +20,16 @@ Ein System entwickeln, mit dem Menschen durch ihre Augenbewegungen zeichnen kön
 3. Zeichenwerkzeuge
 4. Benutzeroberfläche
 5. Barrierefreiheit
+
+[Diagram des Programms](/Augensteuerungs-Zeichnungssystem.pdf)
+
+
+## Funktionen
+
+- **Augensteuerungs-Zeichnen**: Verwenden Sie Ihre Augenbewegungen, um auf der Leinwand zu zeichnen.
+- **Zeichenwerkzeuge**: Beinhaltet Werkzeuge wie Bleistift, Pinsel, Radierer, Füllfarbe und mehr.
+- **Responsive Benutzeroberfläche**: Die Benutzeroberfläche ist responsiv und funktioniert gut auf verschiedenen Bildschirmgrößen.
+- **Zeichnen Starten/Stoppen**: Schalten Sie den Zeichenmodus mit der Start/Stop-Taste um.
 
 ## Zusätzliche Ziele
 - Die Technologie für Augensteuerung weiterentwickeln.
@@ -51,11 +63,11 @@ Ein System entwickeln, mit dem Menschen durch ihre Augenbewegungen zeichnen kön
 
 ### Installation
 
-1. **Repository klonen**:
-   ```sh
-   git clone https://github.com/username/Augensteuerungs-Zeichnungssystem.git
-   cd Augensteuerungs-Zeichnungssystem
-   ```
+1. Klonen Sie das Repository:
+    ```sh
+    git clone https://github.com/yourusername/eye-tracking-paint-program.git
+    cd eye-tracking-paint-program
+    ```
 
 2. Erstelle und aktiviere eine virtuelle Umgebung:
     ```sh
@@ -74,10 +86,45 @@ Ein System entwickeln, mit dem Menschen durch ihre Augenbewegungen zeichnen kön
     npm run build
     ```
 
-5. Starte das Projekt:
+5. Starten Sie die Flask-Anwendung:
     ```sh
     python app.py
     ```
+
+6. Öffnen Sie Ihren Webbrowser und navigieren Sie zu `http://127.0.0.1:5000/`.
+
+## Verwendung
+
+### Zeichnen Starten/Stoppen
+
+- Klicken Sie auf die **Start/Stop Zeichnen**-Taste in der Werkzeugleiste, um den Zeichenmodus umzuschalten.
+- Wenn der Zeichenmodus aktiv ist, werden Ihre Augenbewegungen verfolgt und zum Zeichnen auf der Leinwand verwendet.
+
+### Zeichenwerkzeuge
+
+- Wählen Sie ein Zeichenwerkzeug aus der Werkzeugleiste aus, um es zu verwenden.
+- Verfügbare Werkzeuge sind:
+  - Freiformauswahl
+  - Rechteckauswahl
+  - Radierer
+  - Füllfarbe
+  - Farbauswahl-Werkzeug
+  - Lupe
+  - Bleistift
+  - Pinsel
+  - Airbrush
+  - Textwerkzeug
+  - Linienwerkzeug
+  - Kurvenwerkzeug
+  - Rechteckwerkzeug
+  - Polygon
+  - Ellipsenwerkzeug
+  - Abgerundetes Rechteckwerkzeug
+
+### Farbe und Strichbreite
+
+- Verwenden Sie den Farbwähler, um die Zeichenfarbe zu ändern.
+- Passen Sie die Strichbreite mit dem Strichbreitenschieber an.
 
 ## Tests ausführen
 
@@ -117,3 +164,13 @@ Augensteuerungs-Zeichnungssystem/
     ├── test_cursor_controller.py
     ├── test_eye_tracker.py
     └── test_tools.py
+```
+
+## Beitrag
+
+Beiträge sind willkommen! Bitte öffnen Sie ein Issue oder reichen Sie einen Pull-Request für Verbesserungen oder Fehlerbehebungen ein.
+
+## Lizenz
+
+Dieses Projekt ist unter der MIT-Lizenz lizenziert.
+

@@ -18,7 +18,12 @@
   },
   "homepage": "https://github.com/NooriMilad/Augensteuerungs-Zeichnungssystem#readme",
   "devDependencies": {
+    "@types/fabric": "^5.3.9",
     "ts-loader": "^9.5.2",
     "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "fabric": "^6.5.4",
+    "konva": "^9.3.18"
   }
 }
